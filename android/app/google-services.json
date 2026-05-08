@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "617935900685",
+    "project_id": "macromap-connect",
+    "storage_bucket": "macromap-connect.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:617935900685:android:37417cdc2cbc2731ba0544",
+        "android_client_info": {
+          "package_name": "com.example.macromap_connect"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqyjXTzyCvPpAogOh_2klBShhfIA3aCts"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
