@@ -211,6 +211,8 @@ class _PostCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 4),
                 _CommentButton(postId: post.id),
+                const Spacer(),
+                _SaveButton(postId: post.id, userId: user?.uid),
               ],
             ),
           ],
@@ -313,6 +315,46 @@ class _CommentButton extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _SaveButton extends StatelessWidget {
+  final String postId;
+  final String? userId;
+  const _SaveButton({required this.postId, required this.userId});
+
+  @override
+  Widget build(BuildContext context) {
+    if (userId == null) return const SizedBox.shrink();
+    final ref = FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('saves')
+        .doc(postId);
+    return StreamBuilder<DocumentSnapshot>(
+      stream: ref.snapshots(),
+      builder: (context, snapshot) {
+        final isSaved = snapshot.hasData && snapshot.data!.exists;
+        return InkWell(
+          onTap: () async {
+            if (isSaved) {
+              await ref.delete();
+            } else {
+              await ref.set({'savedAt': FieldValue.serverTimestamp()});
+            }
+          },
+          borderRadius: BorderRadius.circular(20),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            child: Icon(
+              isSaved ? Icons.bookmark : Icons.bookmark_border,
+              color: isSaved ? Colors.green : Colors.grey.shade700,
+              size: 22,
             ),
           ),
         );

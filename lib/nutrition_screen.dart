@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'saudi_food_data.dart';
 import 'meal_log_model.dart';
+import 'nutrition_history_screen.dart';
 
 class NutritionScreen extends StatefulWidget {
   const NutritionScreen({super.key});
@@ -30,7 +31,6 @@ class _NutritionScreenState extends State<NutritionScreen> {
       dateKey: todayKey,
     );
 
-    // This writes to the 'mealLogs' collection
     await FirebaseFirestore.instance.collection('mealLogs').add(log.toMap());
 
     if (mounted) {
@@ -49,7 +49,18 @@ class _NutritionScreenState extends State<NutritionScreen> {
     final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Nutrition Tracker')),
+      appBar: AppBar(
+        title: const Text('Nutrition Tracker'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.history),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const NutritionHistoryScreen()),
+            ),
+          ),
+        ],
+      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('mealLogs')
@@ -58,12 +69,10 @@ class _NutritionScreenState extends State<NutritionScreen> {
             .orderBy('loggedAt', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
-          // 1. Handle Loading State (Prevents the "Zero" flicker)
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          // 2. Handle Errors (This is where the Index Error will show up)
           if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
           }
